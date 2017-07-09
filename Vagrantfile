@@ -27,6 +27,7 @@ Vagrant.configure(2) do |config|
       config.vm.provision 'shell', path: 'provision-docker.sh'
       config.vm.provision 'shell', path: 'provision-docker-swarm.sh', args: [ip, first_node_ip]
       config.vm.provision 'shell', path: 'provision-registry.sh' if ip == first_node_ip
+      config.vm.provision 'shell', path: 'provision-portainer.sh' if ip == first_node_ip
     end
   end
 end
