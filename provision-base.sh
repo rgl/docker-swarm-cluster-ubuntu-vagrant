@@ -6,6 +6,9 @@ set -eux
 #     dpkg-preconfigure: unable to re-open stdin: No such file or directory
 export DEBIAN_FRONTEND=noninteractive
 
+# update the package cache.
+apt-get update
+
 # install vim.
 apt-get install -y --no-install-recommends vim
 cat >/etc/vim/vimrc.local <<'EOF'

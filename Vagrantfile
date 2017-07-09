@@ -22,8 +22,11 @@ Vagrant.configure(2) do |config|
       config.vm.hostname = fqdn
       config.vm.network :private_network, ip: ip
       config.vm.provision 'shell', path: 'provision-base.sh'
+      config.vm.provision 'shell', path: 'provision-certification-authority.sh'
+      config.vm.provision 'shell', path: 'provision-hosts.sh', args: [ip]
       config.vm.provision 'shell', path: 'provision-docker.sh'
       config.vm.provision 'shell', path: 'provision-docker-swarm.sh', args: [ip, first_node_ip]
+      config.vm.provision 'shell', path: 'provision-registry.sh' if ip == first_node_ip
     end
   end
 end
