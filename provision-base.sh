@@ -9,6 +9,9 @@ export DEBIAN_FRONTEND=noninteractive
 # update the package cache.
 apt-get update
 
+# install jq.
+apt-get install -y jq
+
 # install vim.
 apt-get install -y --no-install-recommends vim
 cat >/etc/vim/vimrc.local <<'EOF'
