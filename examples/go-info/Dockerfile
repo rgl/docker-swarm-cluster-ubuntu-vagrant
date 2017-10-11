@@ -1,9 +1,9 @@
-FROM golang:1.8.3-alpine as builder
+FROM golang:1.9.1-alpine as builder
 WORKDIR /go/src/go-info
 COPY main.go .
-RUN go build
+RUN CGO_ENABLED=0 go build -a
 
-FROM alpine:3.6
+FROM scratch
 COPY --from=builder /go/src/go-info/go-info .
 WORKDIR /
 EXPOSE 8000
