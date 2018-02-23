@@ -14,14 +14,14 @@ docker push registry.example.com:5000/go-info:1.0.0
 # see https://docs.docker.com/registry/spec/api/
 # see https://docs.docker.com/registry/spec/manifest-v2-2/
 wget -qO- --user vagrant --password vagrant \
-    https://registry.example.com:5000/v2/go-info/tags/list | jq
+    https://registry.example.com:5000/v2/go-info/tags/list | jq .
 manifest=$(wget -qO- --user vagrant --password vagrant \
     '--header=Accept: application/vnd.docker.distribution.manifest.v2+json' \
     https://registry.example.com:5000/v2/go-info/manifests/1.0.0)
 config_digest=$(echo "$manifest" | jq -r .config.digest)
-echo "$manifest" | jq
+echo "$manifest" | jq .
 wget -qO- --user vagrant --password vagrant \
-    https://registry.example.com:5000/v2/go-info/blobs/$config_digest | jq
+    https://registry.example.com:5000/v2/go-info/blobs/$config_digest | jq .
 
 # remove it from local cache.
 docker image remove go-info:1.0.0
