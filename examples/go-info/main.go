@@ -154,6 +154,16 @@ func main() {
 			parts := strings.SplitN(v, "=", 2)
 			name := parts[0]
 			value := parts[1]
+			switch name {
+			case "PATH":
+				fallthrough
+			case "XDG_DATA_DIRS":
+				fallthrough
+			case "XDG_CONFIG_DIRS":
+				value = strings.Join(
+					strings.Split(value, string(os.PathListSeparator)),
+					"\n")
+			}
 			environment = append(environment, nameValuePair{name, value})
 		}
 		sort.Sort(nameValuePairs(environment))
