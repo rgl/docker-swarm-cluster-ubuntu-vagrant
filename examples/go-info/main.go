@@ -18,12 +18,39 @@ import (
 var indexTemplate = template.Must(template.New("Index").Parse(`<!DOCTYPE html>
 <html>
 <head>
-<title>Hello World</title>
+<title>go-info</title>
 <style>
 body {
-	font-family: DejaVu Sans,Verdana,Geneva,sans-serif;
-	font-size: 13px;
-	background: #ececec;
+	font-family: monospace;
+	color: #555;
+	background: #e6edf4;
+	padding: 1.25rem;
+	margin: 0;
+}
+table {
+	background: #fff;
+	border: .0625rem solid #c4cdda;
+	border-radius: 0 0 .25rem .25rem;
+	border-spacing: 0;
+    margin-bottom: 1.25rem;
+	padding: .75rem 1.25rem;
+	text-align: left;
+	white-space: pre;
+}
+table > caption {
+	background: #f1f6fb;
+	text-align: left;
+	font-weight: bold;
+	padding: .75rem 1.25rem;
+	border: .0625rem solid #c4cdda;
+	border-radius: .25rem .25rem 0 0;
+	border-bottom: 0;
+}
+table td, table th {
+	padding: .25rem;
+}
+table > tbody > tr:hover {
+	background: #f1f6fb;
 }
 </style>
 </head>
@@ -36,6 +63,7 @@ body {
 			<tr><th>Client Address</th><td>{{.ClientAddress}}</td></tr>
 			<tr><th>Server Address</th><td>{{.ServerAddress}}</td></tr>
 			<tr><th>Hostname</th><td>{{.Hostname}}</td></tr>
+			<tr><th>Cgroup</th><td>{{.Cgroup}}</td></tr>
 			<tr><th>Os</th><td>{{.Os}}</td></tr>
 			<tr><th>Architecture</th><td>{{.Architecture}}</td></tr>
 			<tr><th>Runtime</th><td>{{.Runtime}}</td></tr>
@@ -43,16 +71,10 @@ body {
 	</table>
 	<table>
 		<caption>Environment Variables</caption>
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Value</th>
-			</tr>
-		</thead>
 		<tbody>
 			{{- range .Environment}}
 			<tr>
-				<td>{{.Name}}</td>
+				<th>{{.Name}}</th>
 				<td>{{.Value}}</td>
 			</tr>
 			{{- end}}
@@ -60,34 +82,22 @@ body {
 	</table>
 	<table>
 		<caption>Secrets</caption>
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Value</th>
-			</tr>
-		</thead>
 		<tbody>
 			{{- range .Secrets}}
 			<tr>
-				<td>{{.Name}}</td>
-				<td><pre>{{.Value}}</pre></td>
+				<th>{{.Name}}</th>
+				<td>{{.Value}}</td>
 			</tr>
 			{{- end}}
 		</tbody>
 	</table>
 	<table>
 		<caption>Configs</caption>
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Value</th>
-			</tr>
-		</thead>
 		<tbody>
 			{{- range .Configs}}
 			<tr>
-				<td>{{.Name}}</td>
-				<td><pre>{{.Value}}</pre></td>
+				<th>{{.Name}}</th>
+				<td>{{.Value}}</td>
 			</tr>
 			{{- end}}
 		</tbody>
@@ -103,6 +113,7 @@ type nameValuePair struct {
 
 type indexData struct {
 	Pid           int
+	Cgroup        string
 	Request       string
 	ClientAddress string
 	ServerAddress string
@@ -186,8 +197,11 @@ func main() {
 		}
 		sort.Sort(nameValuePairs(configs))
 
+		cgroup, _ := ioutil.ReadFile("/proc/self/cgroup")
+
 		err = indexTemplate.ExecuteTemplate(w, "Index", indexData{
 			Pid:           os.Getpid(),
+			Cgroup:        string(cgroup),
 			Request:       fmt.Sprintf("%s %s%s", r.Method, r.Host, r.URL),
 			ClientAddress: r.RemoteAddr,
 			ServerAddress: r.Context().Value(http.LocalAddrContextKey).(net.Addr).String(),

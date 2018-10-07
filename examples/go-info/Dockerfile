@@ -1,7 +1,7 @@
-FROM golang:1.9.1-alpine as builder
+FROM golang:1.11.1-alpine as builder
 WORKDIR /go/src/go-info
 COPY main.go .
-RUN CGO_ENABLED=0 go build -a
+RUN CGO_ENABLED=0 go build
 
 FROM scratch
 COPY --from=builder /go/src/go-info/go-info .
