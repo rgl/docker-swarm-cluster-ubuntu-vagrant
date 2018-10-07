@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eux
 
+portainer_image='portainer/portainer:1.19.2'
+
 # launch the service.
 docker service create \
     --constraint 'node.role == manager' \
@@ -8,8 +10,9 @@ docker service create \
     --publish published=9000,target=9000 \
     --mount type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock \
     --name portainer \
-    portainer/portainer \
-        -H unix:///var/run/docker.sock
+    $portainer_image \
+        -H unix:///var/run/docker.sock \
+        --no-auth
 
 # get the first expected container name.
 container_name="portainer.1.$(

@@ -1,6 +1,9 @@
 #!/bin/bash
 set -eux
 
+# name of the registry image to use.
+registry_image='registry:2.6.2'
+
 # generate the registry certificate and the corresponding swarm secrets.
 bash /vagrant/provision-certificate.sh registry.example.com
 docker secret create registry.example.com-crt.pem /vagrant/shared/*/registry.example.com-crt.pem
@@ -19,7 +22,7 @@ mkdir -p /vagrant/shared/registry/auth
 docker run \
     --rm \
     --entrypoint htpasswd \
-    registry:2 -Bbn vagrant vagrant >/vagrant/shared/registry/auth/htpasswd
+    $registry_image -Bbn vagrant vagrant >/vagrant/shared/registry/auth/htpasswd
 
 # launch the registry.
 # see https://docs.docker.com/registry/deploying/
@@ -40,7 +43,7 @@ docker service create \
     -e 'REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm' \
     -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \
     --name registry \
-    registry:2
+    $registry_image
 
 # wait for the registry to be available.
 bash -c 'while ! wget -q --spider --user vagrant --password vagrant https://registry.example.com:5000/v2/; do sleep 1; done;'
