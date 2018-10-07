@@ -5,7 +5,7 @@ set -eux
 docker service create \
     --constraint 'node.role == manager' \
     --constraint 'node.labels.registry == true' \
-    --publish 9000:9000 \
+    --publish published=9000,target=9000 \
     --mount type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock \
     --name portainer \
     portainer/portainer \

@@ -26,7 +26,7 @@ docker run \
 mkdir -p /vagrant/shared/registry/data
 docker service create \
     --constraint 'node.labels.registry == true' \
-    --publish 5000:5000 \
+    --publish published=5000,target=5000 \
     --secret registry_http_secret \
     -e REGISTRY_HTTP_SECRET=/run/secrets/registry_http_secret \
     --secret registry.example.com-crt.pem \
