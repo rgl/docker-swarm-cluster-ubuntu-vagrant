@@ -12,7 +12,7 @@ apt-get install -y apt-transport-https software-properties-common
 wget -qO- https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 apt-get update
-apt-get install -y docker-ce=18.06.1~ce~3-0~ubuntu
+apt-get install -y docker-ce
 
 # configure it.
 systemctl stop docker
@@ -24,7 +24,7 @@ cat >/etc/docker/daemon.json <<'EOF'
         "os=linux"
     ],
     "hosts": [
-        "fd://",
+        "unix://",
         "tcp://0.0.0.0:2375"
     ]
 }
