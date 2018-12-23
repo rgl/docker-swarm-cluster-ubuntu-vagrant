@@ -1,8 +1,8 @@
 #!/bin/bash
 set -eux
 
-portainer_agent_image='portainer/agent:1.1.2'
-portainer_image='portainer/portainer:1.19.2'
+portainer_agent_image='portainer/agent:1.2.0'
+portainer_image='portainer/portainer:1.20.0'
 
 # deploy the portainer stack.
 # NB you can destroy it with:
