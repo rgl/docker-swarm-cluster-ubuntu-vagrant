@@ -1,13 +1,13 @@
 #!/bin/bash
 set -eux
 
-portainer_agent_image='portainer/agent:1.2.0'
-portainer_image='portainer/portainer:1.20.0'
+portainer_agent_image='portainer/agent:1.2.1'
+portainer_image='portainer/portainer:1.20.1'
 
 # deploy the portainer stack.
 # NB you can destroy it with:
 #       docker stack rm portainer
-#    NB docker stack rm is asyncronous, so the remove is be done in background
+#    NB docker stack rm is asyncronous, so the remove is done in background
 #       and will be done after a while.
 #    BUT docker stack rm does not automatically remove the volumes, for that,
 #        you need to remove all containers that use that volume, which are
@@ -89,7 +89,10 @@ while true; do
         continue
     fi
 
-    portainer_version="$(docker exec $container_name /portainer --version 2>&1)"
+    # NB this seems more complicated that needed because, sometimes, docker exec
+    #    fails with "unable to upgrade to tcp, received 500" when the container
+    #    dies while it tries to exec into it.
+    portainer_version="$(docker exec $container_name /portainer --version 2>&1 | grep -E '^[0-9]+\.[0-9]+\.[0-9]+' || true)"
     if [ -z "$portainer_version" ]; then
         sleep 1
         continue
