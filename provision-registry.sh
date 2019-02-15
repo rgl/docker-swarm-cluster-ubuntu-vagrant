@@ -2,7 +2,7 @@
 set -eux
 
 # name of the registry image to use.
-registry_image='registry:2.6.2'
+registry_image='registry:2.7.1'
 
 # generate the registry certificate and the corresponding swarm secrets.
 bash /vagrant/provision-certificate.sh registry.example.com
