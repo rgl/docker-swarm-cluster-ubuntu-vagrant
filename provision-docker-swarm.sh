@@ -23,6 +23,9 @@ else
     # join the swarm as a manager.
     docker swarm join \
         --token $(cat /vagrant/shared/docker-swarm-join-token-manager.txt) \
+        --data-path-addr $ip \
+        --listen-addr "$ip:2377" \
+        --advertise-addr "$ip:2377" \
         "$first_node_ip:2377"
 fi
 
