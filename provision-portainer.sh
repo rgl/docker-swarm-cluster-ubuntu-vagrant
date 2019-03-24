@@ -2,7 +2,7 @@
 set -eux
 
 portainer_agent_image='portainer/agent:1.2.1'
-portainer_image='portainer/portainer:1.20.1'
+portainer_image='portainer/portainer:1.20.2'
 
 # deploy the portainer stack.
 # NB you can destroy it with:
