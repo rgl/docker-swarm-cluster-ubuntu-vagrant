@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eux
+set -euxo pipefail
 
 # name of the registry image to use.
 registry_image='registry:2.7.1'
@@ -18,11 +18,18 @@ docker node update --label-add registry=true $(hostname)
 #docker node inspect $(hostname)
 
 # create a registry user.
+# NB we've hardcoded registry:2.7.0 here because the floating registry:2.7.1
+#    tag no longer includes htpasswd.
+#    see https://github.com/docker/distribution-library-image/issues/107
 mkdir -p /vagrant/shared/registry/auth
 docker run \
     --rm \
     --entrypoint htpasswd \
-    $registry_image -Bbn vagrant vagrant >/vagrant/shared/registry/auth/htpasswd
+    'registry:2.7.0' \
+    -Bbn \
+    vagrant \
+    vagrant \
+    >/vagrant/shared/registry/auth/htpasswd
 
 # launch the registry.
 # see https://docs.docker.com/registry/deploying/
