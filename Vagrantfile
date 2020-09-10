@@ -9,7 +9,7 @@ first_node_ip = '10.10.0.201'
 node_ip_addr = IPAddr.new first_node_ip
 
 Vagrant.configure(2) do |config|
-  config.vm.box = 'ubuntu-18.04-amd64'
+  config.vm.box = 'ubuntu-20.04-amd64'
 
   config.vm.provider :libvirt do |lv, config|
     lv.memory = 2048
