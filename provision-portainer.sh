@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 portainer_agent_image='portainer/agent:2.0.0'
-portainer_image='portainer/portainer:1.24.1'
+portainer_image='portainer/portainer-ce:2.0.0'
 
 # deploy the portainer stack.
 # NB you can destroy it with:
@@ -16,19 +16,13 @@ portainer_image='portainer/portainer:1.24.1'
 #        and finally remove the volume:
 #           docker volume rm portainer_portainer_data
 #    see https://github.com/moby/moby/issues/29158
-# see https://portainer.readthedocs.io/en/stable/deployment.html#inside-a-swarm-cluster
+# see https://www.portainer.io/installation/
 # see https://docs.docker.com/compose/compose-file/
 docker stack deploy --compose-file - portainer <<EOF
 version: '3.2'
 services:
     agent:
         image: $portainer_agent_image
-        environment:
-            # REQUIRED: Should be equal to the service name prefixed by "tasks." when
-            # deployed inside an overlay network
-            AGENT_CLUSTER_ADDR: tasks.agent
-            # AGENT_PORT: 9001
-            # LOG_LEVEL: debug
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - /var/lib/docker/volumes:/var/lib/docker/volumes
@@ -41,7 +35,7 @@ services:
                     - node.platform.os == linux
     portainer:
         image: $portainer_image
-        command: -H tcp://tasks.agent:9001 --tlsskipverify --no-auth
+        command: -H tcp://tasks.agent:9001 --tlsskipverify
         ports:
             - '9000:9000'
         volumes:
