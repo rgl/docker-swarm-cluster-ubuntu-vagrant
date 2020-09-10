@@ -1,4 +1,4 @@
-FROM golang:1.12.1-alpine as builder
+FROM golang:1.15.2-alpine as builder
 WORKDIR /go/src/go-info
 COPY main.go .
 RUN CGO_ENABLED=0 go build
