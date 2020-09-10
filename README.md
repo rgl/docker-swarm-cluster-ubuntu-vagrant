@@ -26,7 +26,7 @@ Run `vagrant up` to launch the 3-node cluster.
 
 Try the following endpoints:
 
-* [portainer](http://docker1.example.com:9000): a [Portainer](https://portainer.io/) instance that you can use to manager docker.
+* [portainer](http://docker1.example.com:9000): a [Portainer](https://portainer.io/) instance that you can use to manage docker.
 * [go-info](http://docker1.example.com:8000): a example that shows how an Go application can use secrets and configs.
 
 
